@@ -1,10 +1,19 @@
 # homekey.nvim
 
-A simple plugin to make the home key behave as in other popular editors and IDEs.
+A simple Neovim plugin to make the home key behave like in other popular editors and IDEs.
+
+## Overview
+
+This plugin aims to bring the `<Home>` key in line with how most other editors behave:
+
+- If the cursor is on the first non-whitespace character, move to the 0-th column (e.g., `0`)
+- Otherwise, moves the cursor to the first non-whitespace character on the line
+
+This creates a sort of toggle effect when tapping the `<Home>` key.
+
+`<C-Home>` is set to a function that is essentially `gg0`. No particular reason to have a plugin for just this, but figured I would include it since it's the same sort of expected home key behavior from other editors.
 
 ## Installation
-
-See the [Configuration](#configuration) section for setup details.
 
 With [`lazy.nvim`](https://github.com/folke/lazy.nvim)
 
@@ -34,7 +43,7 @@ This plugin uses the following default configuration:
 }
 ```
 
-Which is used when the `setup` function is called:
+Which is used when the `setup` function is called without a value (or empty table):
 
 ```lua
 -- plugin stuff...
@@ -52,7 +61,7 @@ require("lazy").setup({
     {
         "bwpge/homekey.nvim",
         opts = { set_keymaps = false },
-        -- `config` key not needed since it will
+        -- `config` key not needed since setup will
         -- automatically be called with `opts`
     },
 })
@@ -60,18 +69,18 @@ require("lazy").setup({
 
 ## Keymaps
 
-The following keymaps are set by default when `setup` is called:
+The following keymaps are set by default:
 
-- `<Home>`: `homekey.move_home()`
+- `<Home>`: `require("homekey").move_home()`
     - Modes: `n`, `i`, `v`
     - Description: *Move the cursor to the beginning of the line, alternating between the start and end of leading whitespace*
-- `<C-Home>`: `homekey.move_begin()`
+- `<C-Home>`: `require("homekey").move_begin()`
     - Modes: `n`, `i`, `v`
     - Description: *Move the cursor to the 0-th column on the first line*
 
 ### Lazy Keymaps
 
-Requires `lazy.nvim`:
+There shouldn't be any particular need to lazy-load keymaps for this plugin since startup is pretty much instant, but a `default_keymaps` table is provided if you need it. The table is compatible with the `lazy.nvim` keymap spec, so it can be used in a callback:
 
 ```lua
 require("lazy").setup({
@@ -81,7 +90,7 @@ require("lazy").setup({
         -- disable keymaps in `setup`
         opts = { set_keymaps = false },
         -- lazy load in plugin spec
-        keys = function() return require("homekey").default_keymaps end
+        keys = function() return require("homekey").default_keymaps end,
     },
 })
 ```
