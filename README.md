@@ -113,10 +113,9 @@ Explicit keymap setting (for example, in `lua/user/keymaps.lua` config module):
 require("lazy").setup({
     -- other plugins
     {
-        "bwpge/homekey.nvim"
-        -- if opts and config are not set, setup won't be called
-        -- and no keymaps will be set. you can also use:
-        -- opts = { set_keymaps = false }
+        "bwpge/homekey.nvim",
+        -- be sure to set excluded filetypes if different from defaults
+        opts = { set_keymaps = false }
     },
 })
 
