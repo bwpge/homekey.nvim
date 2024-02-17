@@ -19,6 +19,19 @@ function M.move_home()
     if value == nil then
         return
     end
+
+    -- check if filetype is excluded
+    local is_excluded = false
+    local ft = vim.bo.filetype
+    if M.config and ft then
+        for _, v in ipairs(M.config.exclude_filetypes or {}) do
+            if ft == v or ft:match(v) then
+                is_excluded = true
+                break
+            end
+        end
+    end
+
     local row, col = table.unpack(value)
     if row <= 0 then
         return
@@ -32,7 +45,7 @@ function M.move_home()
     -- toggle between 0 and current index column based on cursor position
     -- note: if the line is all whitespace, the "toggle" column will be off by 1
     --       in normal/visual modes
-    if col == idx or (matched == line and col + 1 == idx) then
+    if is_excluded or col == idx or (matched == line and col + 1 == idx) then
         idx = 0
     end
 
@@ -62,13 +75,22 @@ M.default_keymaps = {
 
 M.default_config = {
     set_keymaps = true,
+    exclude_filetypes = {
+        "neo-tree",
+        "NvimTree",
+    },
 }
 
 ---Runs this plugin's setup with the given options. Primarily handles setting up keymaps.
----@param config? table User specified options for this plugin.
-function M.setup(config)
-    local cfg = vim.tbl_deep_extend("force", config or {}, M.default_config)
-    if not cfg.set_keymaps then
+---@param opts? table User specified options for this plugin.
+function M.setup(opts)
+    local cfg = vim.tbl_deep_extend("force", opts or {}, M.default_config)
+    if opts and opts.exclude_filetypes then
+        cfg.exclude_filetypes = opts.exclude_filetypes
+    end
+
+    M.config = cfg
+    if not M.config.set_keymaps then
         return
     end
 

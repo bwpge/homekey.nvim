@@ -40,6 +40,12 @@ This plugin uses the following default configuration:
 {
     -- set keymaps for <Home> and <C-Home> when `require("homekey").setup` is called
     set_keymaps = true,
+    -- do not use plugin behavior on these filetypes,
+    -- can be exact filetype or lua regular expression
+    exclude_filetypes = {
+        "neo-tree",
+        "NvimTree",
+    },
 }
 ```
 
@@ -53,14 +59,17 @@ require("homekey").setup()
 -- require("homekey").setup({})
 ```
 
-`lazy.nvim` users do not need to explicitly call `require("homekey").setup(...)`. This is done automatically by providing `opts = {}` or `config = true`. If you want to provide your own options, simply populate the `opts` table:
+`lazy.nvim` users do not need to explicitly call `require("homekey").setup(...)`. This is done automatically by providing `opts = {}` or `config = true`. If you want to provide your own options, populate the `opts` table:
 
 ```lua
 require("lazy").setup({
     -- other plugins
     {
         "bwpge/homekey.nvim",
-        opts = { set_keymaps = false },
+        opts = {
+            set_keymaps = false,
+            exclude_filetypes = { "foo", "bar" },
+        },
         -- `config` key not needed since setup will
         -- automatically be called with `opts`
     },
