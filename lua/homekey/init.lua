@@ -58,7 +58,7 @@ M.default_keymaps = {
     {
         "<Home>",
         M.move_home,
-        mode = { "n", "i", "v" },
+        mode = { "n", "i", "x" },
         desc = "Move the cursor to the beginning of the line, alternating between the start and end of leading whitespace",
         noremap = true,
         silent = true,
@@ -66,7 +66,7 @@ M.default_keymaps = {
     {
         "<C-Home>",
         M.move_start,
-        mode = { "n", "i", "v" },
+        mode = { "n", "i", "x" },
         desc = "Move the cursor to the 0-th column on the first line",
         noremap = true,
         silent = true,
