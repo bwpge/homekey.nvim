@@ -20,9 +20,10 @@ With [`lazy.nvim`](https://github.com/folke/lazy.nvim)
 ```lua
 {
     "bwpge/homekey.nvim",
-    config = true,
+    event = "VeryLazy",
+    opts = {},
     -- or equivalent for default options:
-    -- opts = {},
+    -- config = true,
 }
 ```
 
@@ -40,8 +41,8 @@ This plugin uses the following default configuration:
 {
     -- set keymaps for <Home> and <C-Home> when `require("homekey").setup` is called
     set_keymaps = true,
-    -- do not use plugin behavior on these filetypes,
-    -- can be exact filetype or lua regular expression
+    -- do not use plugin behavior on these filetypes;
+    -- can be exact filetype or lua pattern
     exclude_filetypes = {
         "neo-tree",
         "NvimTree",
@@ -66,6 +67,7 @@ require("lazy").setup({
     -- other plugins
     {
         "bwpge/homekey.nvim",
+        event = "VeryLazy",
         opts = {
             set_keymaps = false,
             exclude_filetypes = { "foo", "bar" },
@@ -76,20 +78,9 @@ require("lazy").setup({
 })
 ```
 
-## Keymaps
+### Lazy Loading
 
-The following keymaps are set by default:
-
-- `<Home>`: `require("homekey").move_home()`
-    - Modes: `n`, `i`, `v`
-    - Description: *Move the cursor to the beginning of the line, alternating between the start and end of leading whitespace*
-- `<C-Home>`: `require("homekey").move_begin()`
-    - Modes: `n`, `i`, `v`
-    - Description: *Move the cursor to the 0-th column on the first line*
-
-### Lazy Keymaps
-
-There shouldn't be any particular need to lazy-load keymaps for this plugin since startup is pretty much instant, but a `default_keymaps` table is provided if you need it. The table is compatible with the `lazy.nvim` keymap spec, so it can be used in a callback:
+For `lazy.nvim` users, a `default_keymaps` table is provided if you prefer to lazy load with keymaps rather than on `VeryLazy`. The table is compatible with the `lazy.nvim` keymap spec, so it can be returned by a callback:
 
 ```lua
 require("lazy").setup({
@@ -98,11 +89,24 @@ require("lazy").setup({
         "bwpge/homekey.nvim",
         -- disable keymaps in `setup`
         opts = { set_keymaps = false },
-        -- lazy load in plugin spec
-        keys = function() return require("homekey").default_keymaps end,
+        -- lazy load with keys
+        keys = function()
+            return require("homekey").default_keymaps
+        end,
     },
 })
 ```
+
+## Keymaps
+
+The following keymaps are set by default:
+
+- `<Home>`: `require("homekey").move_home()`
+    - Modes: `n`, `i`, `x`
+    - Description: *Move the cursor to the beginning of the line, alternating between the start and end of leading whitespace*
+- `<C-Home>`: `require("homekey").move_begin()`
+    - Modes: `n`, `i`, `x`
+    - Description: *Move the cursor to the 0-th column on the first line*
 
 ### Custom Keymaps
 
@@ -122,8 +126,6 @@ require("lazy").setup({
 -- set `<leader>h` to `move_home` in normal mode
 vim.keymap.set("n", "<leader>h", require("homekey").move_home)
 ```
-
-See the [API](#api) section for more information.
 
 ## API
 
